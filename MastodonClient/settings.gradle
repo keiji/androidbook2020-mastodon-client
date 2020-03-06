@@ -1,0 +1,2 @@
+rootProject.name='MastodonClient'
+include ':app'
