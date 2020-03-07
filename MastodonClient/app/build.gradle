@@ -8,6 +8,14 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+       jvmTarget = 1.8
+    }
+
     dataBinding {
         enabled true
     }
@@ -41,4 +49,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.fragment:fragment-ktx:1.2.3'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
 }
