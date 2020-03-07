@@ -37,8 +37,7 @@ class TootListAdapter(
         private val binding: ListItemTootBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(toot: Toot) {
-            binding.userName.text = toot.account.username
-            binding.content.text = toot.content
+            binding.toot = toot
         }
     }
 }
