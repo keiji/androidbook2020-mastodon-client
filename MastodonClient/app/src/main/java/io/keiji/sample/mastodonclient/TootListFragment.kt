@@ -58,7 +58,7 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         }
 
         coroutineScope.launch {
-            val tootListResponse = api.fetchPublicTimeline()
+            val tootListResponse = api.fetchPublicTimeline(onlyMedia = true)
             tootList.addAll(tootListResponse)
             reloadTootList()
         }
