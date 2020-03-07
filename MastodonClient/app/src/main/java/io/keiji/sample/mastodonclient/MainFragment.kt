@@ -14,7 +14,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = DataBindingUtil.bind(view)
-        binding?.textview?.text = "Hello Fragment"
+        binding?.button?.setOnClickListener {
+            binding?.button?.text = "clicked"
+        }
     }
 
     override fun onDestroyView() {
