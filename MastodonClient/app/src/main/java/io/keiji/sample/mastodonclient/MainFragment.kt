@@ -9,6 +9,7 @@ import io.keiji.sample.mastodonclient.databinding.FragmentMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -34,7 +35,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             CoroutineScope(Dispatchers.IO).launch {
                 val response = api.fetchPublicTimeline().string()
                 Log.d(TAG, response)
-                binding?.button?.text = response
+                withContext(Dispatchers.Main) {
+                    binding?.button?.text = response
+                }
             }
         }
     }
