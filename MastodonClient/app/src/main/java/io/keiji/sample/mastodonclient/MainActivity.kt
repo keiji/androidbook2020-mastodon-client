@@ -2,7 +2,8 @@ package io.keiji.sample.mastodonclient
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import io.keiji.sample.mastodonclient.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,7 +11,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val textView: TextView = findViewById(R.id.textview)
-        textView.text = "Hello XML Layout!"
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(
+                this,
+                R.layout.activity_main
+        )
+        binding.textview.text = "Hello DataBinding!"
     }
 }
