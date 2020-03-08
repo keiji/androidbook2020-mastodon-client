@@ -6,6 +6,8 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.moshi.Moshi
@@ -40,7 +42,7 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
     private lateinit var adapter: TootListAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
-    private var isLoading = AtomicBoolean()
+    private val isLoading = MutableLiveData<Boolean>()
     private var hasNext = AtomicBoolean().apply { set(true) }
 
     private val loadNextScrollListener = object : RecyclerView.OnScrollListener() {
@@ -48,7 +50,8 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            if (isLoading.get() || !hasNext.get()) {
+            val isLoadingSnapshot = isLoading.value ?: return
+            if (isLoadingSnapshot || !hasNext.get()) {
                 return
             }
 
@@ -85,6 +88,10 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
             loadNext()
         }
 
+        isLoading.observe(viewLifecycleOwner, Observer {
+            binding?.swipeRefreshLayout?.isRefreshing = it
+        })
+
         loadNext()
     }
 
@@ -94,18 +101,9 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         binding?.unbind()
     }
 
-    private suspend fun showProgress() = withContext(Dispatchers.Main) {
-        binding?.swipeRefreshLayout?.isRefreshing = true
-    }
-
-    private suspend fun dismissProgress() = withContext(Dispatchers.Main) {
-        binding?.swipeRefreshLayout?.isRefreshing = false
-    }
-
     private fun loadNext() {
         lifecycleScope.launch {
-            isLoading.set(true)
-            showProgress()
+            isLoading.postValue(true)
 
             val tootListResponse = withContext(Dispatchers.IO) {
                 api.fetchPublicTimeline(
@@ -123,9 +121,8 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
             reloadTootList()
             Log.d(TAG, "reloadTootList")
 
-            isLoading.set(false)
+            isLoading.postValue(false)
             hasNext.set(tootListResponse.isNotEmpty())
-            dismissProgress()
             Log.d(TAG, "dismissProgress")
         }
     }
