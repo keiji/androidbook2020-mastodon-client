@@ -19,15 +19,27 @@
 
         <TextView
             android:id="@+id/user_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@{toot.account.username}"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="keiji" />
+
+        <TextView
+            android:id="@+id/created_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@{toot.createdAt}"
+            app:layout_constraintTop_toTopOf="@+id/user_name"
+            app:layout_constraintBottom_toBottomOf="@+id/user_name"
+            app:layout_constraintStart_toEndOf="@+id/user_name"
+            app:layout_constraintEnd_toEndOf="@+id/content"
+            app:layout_constraintHorizontal_bias="1.0"
+            tools:text="2019-11-26T23:27:31.000Zt" />
 
         <TextView
             android:id="@+id/content"
