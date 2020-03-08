@@ -1,6 +1,7 @@
 package io.keiji.sample.mastodonclient
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.keiji.sample.mastodonclient.databinding.FragmentTootListBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -95,6 +97,12 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         binding?.unbind()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        coroutineScope.cancel()
+    }
+
     private suspend fun showProgress() = withContext(Dispatchers.Main) {
         binding?.swipeRefreshLayout?.isRefreshing = true
     }
@@ -112,12 +120,20 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
                 maxId = tootList.lastOrNull()?.id,
                 onlyMedia = true
             )
+            Log.d(TAG, "fetchPublicTimeline")
+
+            Thread.sleep(10 * 1000)
+
             tootList.addAll(tootListResponse.filter { !it.sensitive })
+            Log.d(TAG, "addAll")
+
             reloadTootList()
+            Log.d(TAG, "reloadTootList")
 
             isLoading.set(false)
             hasNext.set(tootListResponse.isNotEmpty())
             dismissProgress()
+            Log.d(TAG, "dismissProgress")
         }
     }
 
