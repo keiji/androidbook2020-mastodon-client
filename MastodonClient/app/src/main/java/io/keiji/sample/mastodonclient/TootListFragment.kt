@@ -84,7 +84,7 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
             adapter.notifyDataSetChanged()
         })
 
-        viewModel.loadNext()
+        viewLifecycleOwner.lifecycle.addObserver(viewModel)
     }
 
     override fun onDestroyView() {
