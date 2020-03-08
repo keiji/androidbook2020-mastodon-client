@@ -10,14 +10,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.keiji.sample.mastodonclient.databinding.FragmentTootListBinding
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.atomic.AtomicBoolean
 
 class TootListFragment : Fragment(R.layout.fragment_toot_list) {
@@ -30,14 +24,7 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
 
     private var binding: FragmentTootListBinding? = null
 
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(API_BASE_URL)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build()
-    private val api = retrofit.create(MastodonApi::class.java)
+    private val tootRepository = TootRepository(API_BASE_URL)
 
     private lateinit var adapter: TootListAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -114,12 +101,10 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
 
             val tootListSnapshot = tootList.value ?: return@launch
 
-            val tootListResponse = withContext(Dispatchers.IO) {
-                api.fetchPublicTimeline(
-                        maxId = tootListSnapshot.lastOrNull()?.id,
-                        onlyMedia = true
-                )
-            }
+            val tootListResponse = tootRepository.fetchPublicTimeline(
+                    maxId = tootListSnapshot.lastOrNull()?.id,
+                    onlyMedia = true
+            )
             Log.d(TAG, "fetchPublicTimeline")
 
             tootListSnapshot.addAll(tootListResponse.filter { !it.sensitive })
