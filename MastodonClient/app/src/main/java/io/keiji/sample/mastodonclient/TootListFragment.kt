@@ -5,14 +5,13 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.keiji.sample.mastodonclient.databinding.FragmentTootListBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -37,8 +36,6 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
     private val api = retrofit.create(MastodonApi::class.java)
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     private lateinit var adapter: TootListAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -97,12 +94,6 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         binding?.unbind()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        coroutineScope.cancel()
-    }
-
     private suspend fun showProgress() = withContext(Dispatchers.Main) {
         binding?.swipeRefreshLayout?.isRefreshing = true
     }
@@ -112,14 +103,16 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
     }
 
     private fun loadNext() {
-        coroutineScope.launch {
+        lifecycleScope.launch {
             isLoading.set(true)
             showProgress()
 
-            val tootListResponse = api.fetchPublicTimeline(
-                maxId = tootList.lastOrNull()?.id,
-                onlyMedia = true
-            )
+            val tootListResponse = withContext(Dispatchers.IO) {
+                api.fetchPublicTimeline(
+                        maxId = tootList.lastOrNull()?.id,
+                        onlyMedia = true
+                )
+            }
             Log.d(TAG, "fetchPublicTimeline")
 
             Thread.sleep(10 * 1000)
