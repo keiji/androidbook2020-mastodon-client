@@ -28,6 +28,22 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "test", "\"test\"")
+
+        def instanceProperties = project.rootProject.file('instance.properties')
+        if (!instanceProperties.exists()) {
+            instanceProperties.createNewFile()
+        }
+
+        def prop = new Properties()
+        prop.load(project.rootProject.file('instance.properties').newDataInputStream())
+        def INSTANCE_URL = prop.getProperty("instance_url") ?: ""
+        def USERNAME = prop.getProperty("username") ?: ""
+        def ACCESS_TOKEN = prop.getProperty("access_token") ?: ""
+
+        buildConfigField("String", "INSTANCE_URL", "\"${INSTANCE_URL}\"")
+        buildConfigField("String", "USERNAME", "\"${USERNAME}\"")
+        buildConfigField("String", "ACCESS_TOKEN", "\"${ACCESS_TOKEN}\"")
     }
 
     buildTypes {
