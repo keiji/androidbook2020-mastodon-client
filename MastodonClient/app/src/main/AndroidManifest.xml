@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.toot_detail.TootDetailActivity" />
-        <activity android:name=".ui.toot_edit.TootEditActivity" />
+        <activity android:name=".ui.toot_edit.TootEditActivity"
+                android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
