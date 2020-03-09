@@ -25,6 +25,7 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
     private val viewModel: TootListViewModel by viewModels {
         TootListViewModelFactory(
                 BuildConfig.INSTANCE_URL,
+                BuildConfig.USERNAME,
                 lifecycleScope,
                 requireContext()
         )
