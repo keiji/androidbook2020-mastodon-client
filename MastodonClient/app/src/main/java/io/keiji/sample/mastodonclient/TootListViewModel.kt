@@ -20,12 +20,14 @@ class TootListViewModel(
         application
     )
     private lateinit var tootRepository: TootRepository
+    private lateinit var accountRepository: AccountRepository
 
     private lateinit var userCredential: UserCredential
 
     val isLoading = MutableLiveData<Boolean>()
     var hasNext = true
 
+    val accountInfo = MutableLiveData<Account>()
     val tootList = MutableLiveData<ArrayList<Toot>>()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -34,6 +36,7 @@ class TootListViewModel(
             userCredential = userCredentialRepository
                 .find(instanceUrl, username) ?: return@launch
             tootRepository = TootRepository(userCredential)
+            accountRepository = AccountRepository(userCredential)
 
             loadNext()
         }
@@ -46,6 +49,8 @@ class TootListViewModel(
 
     fun loadNext() {
         coroutineScope.launch {
+            updateAccountInfo()
+
             isLoading.postValue(true)
 
             val tootListSnapshot = tootList.value ?: ArrayList()
@@ -60,5 +65,12 @@ class TootListViewModel(
             hasNext = tootListResponse.isNotEmpty()
             isLoading.postValue(false)
         }
+    }
+
+    private suspend fun updateAccountInfo() {
+        val accountInfoSnapshot = accountInfo.value
+            ?: accountRepository.verifyAccountCredential()
+
+        accountInfo.postValue(accountInfoSnapshot)
     }
 }

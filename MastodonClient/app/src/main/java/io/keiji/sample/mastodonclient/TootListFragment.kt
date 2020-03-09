@@ -2,6 +2,7 @@ package io.keiji.sample.mastodonclient
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -79,11 +80,21 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list) {
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             binding?.swipeRefreshLayout?.isRefreshing = it
         })
+        viewModel.accountInfo.observe(viewLifecycleOwner, Observer {
+            showAccountInfo(it)
+        })
         viewModel.tootList.observe(viewLifecycleOwner, Observer {
             adapter.notifyDataSetChanged()
         })
 
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
+    }
+
+    private fun showAccountInfo(accountInfo: Account) {
+        val activity = requireActivity()
+        if (activity is AppCompatActivity) {
+            activity.supportActionBar?.subtitle = accountInfo.username
+        }
     }
 
     override fun onDestroyView() {
