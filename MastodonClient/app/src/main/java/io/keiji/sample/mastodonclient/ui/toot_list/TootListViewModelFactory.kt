@@ -1,4 +1,4 @@
-package io.keiji.sample.mastodonclient
+package io.keiji.sample.mastodonclient.ui.toot_list
 
 import android.app.Application
 import android.content.Context

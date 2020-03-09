@@ -1,9 +1,10 @@
-package io.keiji.sample.mastodonclient
+package io.keiji.sample.mastodonclient.ui.toot_detail
 
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import io.keiji.sample.mastodonclient.entity.Toot
 import kotlinx.coroutines.CoroutineScope
 
 class TootDetailViewModelFactory(

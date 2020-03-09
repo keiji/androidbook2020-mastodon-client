@@ -1,10 +1,11 @@
-package io.keiji.sample.mastodonclient
+package io.keiji.sample.mastodonclient.ui
 
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import io.keiji.sample.mastodonclient.entity.Media
 
 @BindingAdapter("media")
 fun ImageView.setMedia(media: Media?) {

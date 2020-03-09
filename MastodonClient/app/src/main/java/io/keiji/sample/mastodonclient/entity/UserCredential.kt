@@ -1,4 +1,4 @@
-package io.keiji.sample.mastodonclient
+package io.keiji.sample.mastodonclient.entity
 
 data class UserCredential(
     val instanceUrl: String,
