@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.toot_detail.TootDetailActivity" />
+        <activity android:name=".ui.toot_edit.TootEditActivity" />
     </application>
 
 </manifest>
