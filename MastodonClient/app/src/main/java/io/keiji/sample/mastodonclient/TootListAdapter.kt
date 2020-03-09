@@ -8,8 +8,13 @@ import io.keiji.sample.mastodonclient.databinding.ListItemTootBinding
 
 class TootListAdapter(
     private val layoutInflater: LayoutInflater,
-    private val tootList: ArrayList<Toot>
+    private val tootList: ArrayList<Toot>,
+    private val callback: Callback?
 ) : RecyclerView.Adapter<TootListAdapter.ViewHolder>() {
+
+    interface Callback {
+        fun openDetail(toot: Toot)
+    }
 
     override fun getItemCount() = tootList.size
 
@@ -23,7 +28,7 @@ class TootListAdapter(
             parent,
             false
         )
-        return ViewHolder(binding)
+        return ViewHolder(binding, callback)
     }
 
     override fun onBindViewHolder(
@@ -34,10 +39,14 @@ class TootListAdapter(
     }
 
     class ViewHolder(
-        private val binding: ListItemTootBinding
+        private val binding: ListItemTootBinding,
+        private val callback: Callback?
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(toot: Toot) {
             binding.toot = toot
+            binding.root.setOnClickListener {
+                callback?.openDetail(toot)
+            }
         }
     }
 }
