@@ -21,6 +21,8 @@
         <activity android:name=".ui.toot_detail.TootDetailActivity" />
         <activity android:name=".ui.toot_edit.TootEditActivity"
                 android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
