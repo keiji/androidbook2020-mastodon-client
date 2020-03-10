@@ -1,12 +1,14 @@
 package io.keiji.sample.mastodonclient.ui.toot_edit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.keiji.sample.mastodonclient.R
 
-class TootEditActivity : AppCompatActivity() {
+class TootEditActivity : AppCompatActivity(),
+        TootEditFragment.Callback {
 
     companion object {
         val TAG = TootEditActivity::class.java.simpleName
@@ -26,6 +28,11 @@ class TootEditActivity : AppCompatActivity() {
                     .replace(R.id.fragment_container, fragment, TootEditFragment.TAG)
                     .commit()
         }
+    }
+
+    override fun onPostComplete() {
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
 }
