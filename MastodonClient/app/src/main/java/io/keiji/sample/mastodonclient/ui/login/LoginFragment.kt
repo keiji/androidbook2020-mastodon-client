@@ -38,6 +38,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private var callback: Callback? = null
 
+    fun requestAccessToken(code: String) {
+        viewModel.requestAccessToken(
+            BuildConfig.CLIENT_KEY,
+            BuildConfig.CLIENT_SECRET,
+            REDIRECT_URI,
+            BuildConfig.CLIENT_SCOPES,
+            code
+        )
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
