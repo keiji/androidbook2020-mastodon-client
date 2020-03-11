@@ -15,6 +15,7 @@ import io.keiji.sample.mastodonclient.repository.UserCredentialRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.io.IOException
 import java.net.HttpURLConnection
 
 class TootListViewModel(
@@ -85,6 +86,10 @@ class TootListViewModel(
                         errorMessage.postValue("必要な権限がありません")
                     }
                 }
+            }  catch (e: IOException) {
+                errorMessage.postValue(
+                    "サーバーに接続できませんでした。${e.message}"
+                )
             } finally {
                 isLoading.postValue(false)
             }
@@ -103,6 +108,10 @@ class TootListViewModel(
                     errorMessage.postValue("必要な権限がありません")
                 }
             }
+        }  catch (e: IOException) {
+            errorMessage.postValue(
+                "サーバーに接続できませんでした。${e.message}"
+            )
         }
     }
 
@@ -120,6 +129,10 @@ class TootListViewModel(
                         errorMessage.postValue("必要な権限がありません")
                     }
                 }
+            }  catch (e: IOException) {
+                errorMessage.postValue(
+                    "サーバーに接続できませんでした。${e.message}"
+                )
             }
         }
     }
