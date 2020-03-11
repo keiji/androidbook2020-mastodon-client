@@ -1,6 +1,7 @@
 package io.keiji.sample.mastodonclient.ui.toot_edit
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -16,11 +17,14 @@ import com.google.android.material.snackbar.Snackbar
 import io.keiji.sample.mastodonclient.BuildConfig
 import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.FragmentTootEditBinding
+import io.keiji.sample.mastodonclient.ui.login.LoginActivity
 
 class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
 
     companion object {
         val TAG = TootEditFragment::class.java.simpleName
+
+        private const val REQUEST_CODE_LOGIN = 0x01
 
         fun newInstance(): TootEditFragment {
             return TootEditFragment()
@@ -63,6 +67,11 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         bindingData.lifecycleOwner = viewLifecycleOwner
         bindingData.viewModel = viewModel
 
+        viewModel.loginRequired.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                launchLoginActivity()
+            }
+        })
         viewModel.postComplete.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), "投稿完了しました", Toast.LENGTH_LONG).show()
             callback?.onPostComplete()
@@ -70,6 +79,11 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
+    }
+
+    private fun launchLoginActivity() {
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_LOGIN)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

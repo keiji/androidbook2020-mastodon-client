@@ -17,6 +17,7 @@ import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.FragmentTootListBinding
 import io.keiji.sample.mastodonclient.entity.Account
 import io.keiji.sample.mastodonclient.entity.Toot
+import io.keiji.sample.mastodonclient.ui.login.LoginActivity
 import io.keiji.sample.mastodonclient.ui.toot_detail.TootDetailActivity
 import io.keiji.sample.mastodonclient.ui.toot_edit.TootEditActivity
 
@@ -29,6 +30,7 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
         private const val BUNDLE_KEY_TIMELINE_TYPE_ORDINAL = "timeline_type_ordinal"
 
         private const val REQUEST_CODE_TOOT_EDIT = 0x01
+        private const val REQUEST_CODE_LOGIN = 0x02
 
         @JvmStatic
         fun newInstance(timelineType: TimelineType): TootListFragment {
@@ -118,6 +120,11 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
             launchTootEditActivity()
         }
 
+        viewModel.loginRequired.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                launchLoginActivity()
+            }
+        })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             binding?.swipeRefreshLayout?.isRefreshing = it
         })
@@ -129,6 +136,11 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
         })
 
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
+    }
+
+    private fun launchLoginActivity() {
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_LOGIN)
     }
 
     private fun launchTootEditActivity() {
