@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import io.keiji.sample.mastodonclient.BuildConfig
 import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.FragmentTootListBinding
@@ -128,6 +129,9 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
         })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             binding?.swipeRefreshLayout?.isRefreshing = it
+        })
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+            Snackbar.make(bindingData.swipeRefreshLayout, it, Snackbar.LENGTH_LONG).show()
         })
         viewModel.accountInfo.observe(viewLifecycleOwner, Observer {
             showAccountInfo(it)
