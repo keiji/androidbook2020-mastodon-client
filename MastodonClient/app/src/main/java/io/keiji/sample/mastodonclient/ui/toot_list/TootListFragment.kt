@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -162,6 +163,24 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
             && resultCode == Activity.RESULT_OK) {
             viewModel.clear()
             viewModel.loadNext()
+        }
+
+        if (requestCode == REQUEST_CODE_LOGIN) {
+            handleLoginActivityResult(resultCode)
+        }
+    }
+
+    private fun handleLoginActivityResult(resultCode: Int) {
+        when (resultCode) {
+            Activity.RESULT_OK -> viewModel.reloadUserCredential()
+            else -> {
+                Toast.makeText(
+                    requireContext(),
+                    "ログインが完了しませんでした",
+                    Toast.LENGTH_LONG
+                ).show()
+                requireActivity().finish()
+            }
         }
     }
 
