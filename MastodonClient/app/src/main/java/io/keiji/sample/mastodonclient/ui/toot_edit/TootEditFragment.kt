@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import io.keiji.sample.mastodonclient.BuildConfig
 import io.keiji.sample.mastodonclient.R
@@ -60,6 +61,9 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         }
     }
 
+    private lateinit var adapter: MediaPreviewAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -69,6 +73,16 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         bindingData.lifecycleOwner = viewLifecycleOwner
         bindingData.viewModel = viewModel
 
+        adapter = MediaPreviewAdapter(layoutInflater, lifecycleScope)
+        layoutManager = LinearLayoutManager(requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        bindingData.mediaPreview.also {
+            it.layoutManager = layoutManager
+            it.adapter = adapter
+        }
         bindingData.addMedia.setOnClickListener {
             openMediaChooser()
         }
@@ -77,6 +91,9 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
             if (it) {
                 launchLoginActivity()
             }
+        })
+        viewModel.mediaAttachments.observe(viewLifecycleOwner, Observer {
+            adapter.mediaAttachments = it
         })
         viewModel.postComplete.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), "投稿完了しました", Toast.LENGTH_LONG).show()

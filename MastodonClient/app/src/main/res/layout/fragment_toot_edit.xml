@@ -20,8 +20,15 @@
             android:layout_height="0dp"
             android:hint="いまなにをしていますか"
             android:text="@={viewModel.status}"
-            app:layout_constraintBottom_toTopOf="@+id/add_media"
+            app:layout_constraintBottom_toTopOf="@+id/media_preview"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/media_preview"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/add_media"
+            tools:listitem="@layout/list_item_media" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             style="@style/Widget.AppCompat.Button.Borderless"
