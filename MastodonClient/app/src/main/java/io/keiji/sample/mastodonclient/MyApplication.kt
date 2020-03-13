@@ -4,6 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.room.Room
 import io.keiji.sample.mastodonclient.db.AppDatabase
+import timber.log.Timber
+import timber.log.Timber.DebugTree
+
 
 class MyApplication : Application() {
 
@@ -37,7 +40,12 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
+
         Log.d(TAG, "Application is created.")
+        Timber.d("Application is created.")
 
         initDatabase(this)
     }
