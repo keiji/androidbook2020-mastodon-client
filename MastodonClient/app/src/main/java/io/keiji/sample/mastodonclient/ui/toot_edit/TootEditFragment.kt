@@ -98,7 +98,6 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         })
         viewModel.postComplete.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), "投稿キューに追加しました", Toast.LENGTH_LONG).show()
-            launchPostService()
 
             callback?.onPostComplete()
         })

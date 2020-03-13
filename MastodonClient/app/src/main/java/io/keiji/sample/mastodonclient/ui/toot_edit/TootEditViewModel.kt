@@ -4,11 +4,16 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import io.keiji.sample.mastodonclient.entity.LocalMedia
 import io.keiji.sample.mastodonclient.repository.MediaFileRepository
 import io.keiji.sample.mastodonclient.repository.PostTootQueueRepository
 import io.keiji.sample.mastodonclient.repository.TootRepository
 import io.keiji.sample.mastodonclient.repository.UserCredentialRepository
+import io.keiji.sample.mastodonclient.worker.PostTootWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -28,6 +33,8 @@ class TootEditViewModel(
     )
     private val postTootQueueRepository = PostTootQueueRepository(application)
     private val mediaFileRepository = MediaFileRepository(application)
+
+    private val workManager = WorkManager.getInstance(application)
 
     val status = MutableLiveData<String>()
 
@@ -51,8 +58,20 @@ class TootEditViewModel(
                 mediaAttachments.value
             )
 
+            enqueueWorker()
+
             postComplete.postValue(true)
         }
+    }
+
+    private fun enqueueWorker() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val postWorkRequest = OneTimeWorkRequestBuilder<PostTootWorker>()
+            .setConstraints(constraints)
+            .build()
+        workManager.enqueue(postWorkRequest)
     }
 
     fun postToot() {
