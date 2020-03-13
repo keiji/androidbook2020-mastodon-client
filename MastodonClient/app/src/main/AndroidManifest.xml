@@ -37,6 +37,10 @@
                     android:scheme="auth" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.PostTootService"
+            android:exported="false" />
     </application>
 
 </manifest>
