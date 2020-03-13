@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import io.keiji.sample.mastodonclient.BuildConfig
 import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.FragmentTootEditBinding
+import io.keiji.sample.mastodonclient.service.PostTootService
 import io.keiji.sample.mastodonclient.ui.login.LoginActivity
 
 class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
@@ -96,12 +97,19 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
             adapter.mediaAttachments = it
         })
         viewModel.postComplete.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(requireContext(), "投稿完了しました", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "投稿キューに追加しました", Toast.LENGTH_LONG).show()
+            launchPostService()
+
             callback?.onPostComplete()
         })
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
+    }
+
+    private fun launchPostService() {
+        val intent = Intent(requireContext(), PostTootService::class.java)
+        requireActivity().startService(intent)
     }
 
     private fun openMediaChooser() {
@@ -137,7 +145,7 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_post -> {
-                viewModel.postToot()
+                viewModel.addTootQueue()
                 true
             }
             else -> super.onOptionsItemSelected(item)

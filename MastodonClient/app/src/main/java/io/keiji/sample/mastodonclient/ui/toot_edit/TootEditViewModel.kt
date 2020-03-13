@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import io.keiji.sample.mastodonclient.entity.LocalMedia
 import io.keiji.sample.mastodonclient.repository.MediaFileRepository
+import io.keiji.sample.mastodonclient.repository.PostTootQueueRepository
 import io.keiji.sample.mastodonclient.repository.TootRepository
 import io.keiji.sample.mastodonclient.repository.UserCredentialRepository
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +26,7 @@ class TootEditViewModel(
     private val userCredentialRepository = UserCredentialRepository(
         application
     )
+    private val postTootQueueRepository = PostTootQueueRepository(application)
     private val mediaFileRepository = MediaFileRepository(application)
 
     val status = MutableLiveData<String>()
@@ -33,6 +35,25 @@ class TootEditViewModel(
 
     val postComplete = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
+
+    fun addTootQueue() {
+        val statusSnapshot = status.value ?: return
+        if (statusSnapshot.isBlank()) {
+            errorMessage.postValue("投稿内容がありません")
+            return
+        }
+
+        coroutineScope.launch {
+            postTootQueueRepository.addQueue(
+                instanceUrl,
+                username,
+                statusSnapshot,
+                mediaAttachments.value
+            )
+
+            postComplete.postValue(true)
+        }
+    }
 
     fun postToot() {
         val statusSnapshot = status.value ?: return
