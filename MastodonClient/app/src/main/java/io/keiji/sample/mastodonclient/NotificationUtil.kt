@@ -2,6 +2,7 @@ package io.keiji.sample.mastodonclient
 
 import android.app.NotificationChannel
 import android.content.Context
+import android.os.Build
 import androidx.core.app.NotificationManagerCompat
 
 private const val CHANNEL_ID_GENERAL = "general"
@@ -35,6 +36,10 @@ private fun registerNotificationChannel(
     importance: Int,
     context: Context
 ) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        return
+    }
+
     val channel = NotificationChannel(
         channelId,
         name,
