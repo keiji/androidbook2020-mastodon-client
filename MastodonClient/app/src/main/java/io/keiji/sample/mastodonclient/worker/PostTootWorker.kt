@@ -8,6 +8,8 @@ import io.keiji.sample.mastodonclient.db.entity.PostMediaQueue
 import io.keiji.sample.mastodonclient.repository.PostTootQueueRepository
 import io.keiji.sample.mastodonclient.repository.TootRepository
 import io.keiji.sample.mastodonclient.repository.UserCredentialRepository
+import io.keiji.sample.mastodonclient.showErrorNotification
+import io.keiji.sample.mastodonclient.showNotification
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.File
@@ -57,6 +59,11 @@ class PostTootWorker(
 
                     postTootQueueRepository.delete(queue)
                 }
+
+            showNotification(
+                applicationContext,
+                "Tootの投稿を完了しました"
+            )
             Result.success()
         } catch (e: HttpException) {
             handleException(e)
@@ -97,11 +104,22 @@ class PostTootWorker(
                 Pair("不明なエラーです ${e.message}", Result.retry())
             }
         }
+
+        showErrorNotification(
+            applicationContext,
+            message
+        )
+
         Timber.e(message)
         return result
     }
 
     private fun handleException(e: IOException): Result {
+        showErrorNotification(
+            applicationContext,
+            "サーバーに接続できませんでした"
+        )
+
         Timber.e(e)
         return Result.retry()
     }
