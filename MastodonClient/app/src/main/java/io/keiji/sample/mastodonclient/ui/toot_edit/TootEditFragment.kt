@@ -3,6 +3,7 @@ package io.keiji.sample.mastodonclient.ui.toot_edit
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -118,6 +119,11 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
             mimeType == "text/plain" -> {
                 val text = extras.getString(Intent.EXTRA_TEXT)
                 viewModel.status.postValue(text)
+            }
+            mimeType.startsWith("image/") -> {
+                extras.getParcelable<Uri>(Intent.EXTRA_STREAM)?.also {
+                    viewModel.addMedia(it)
+                }
             }
         }
     }
