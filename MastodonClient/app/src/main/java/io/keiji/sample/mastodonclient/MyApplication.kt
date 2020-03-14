@@ -47,6 +47,9 @@ class MyApplication : Application() {
         Log.d(TAG, "Application is created.")
         Timber.d("Application is created.")
 
+        registerNotificationChannelGeneral(this)
+        registerNotificationChannelError(this)
+
         initDatabase(this)
     }
 }
