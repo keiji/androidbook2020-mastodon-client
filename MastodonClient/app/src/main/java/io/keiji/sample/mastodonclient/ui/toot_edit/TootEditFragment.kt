@@ -74,6 +74,8 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         bindingData.lifecycleOwner = viewLifecycleOwner
         bindingData.viewModel = viewModel
 
+        handleIntentExtras(requireActivity().intent)
+
         adapter = MediaPreviewAdapter(layoutInflater, lifecycleScope)
         layoutManager = LinearLayoutManager(requireContext(),
             LinearLayoutManager.HORIZONTAL,
@@ -104,6 +106,20 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
+    }
+
+    private fun handleIntentExtras(intent: Intent) {
+        val extras = intent.extras ?: return
+        val mimeType = intent.type
+        when {
+            mimeType == null -> {
+                // nothing to do
+            }
+            mimeType == "text/plain" -> {
+                val text = extras.getString(Intent.EXTRA_TEXT)
+                viewModel.status.postValue(text)
+            }
+        }
     }
 
     private fun launchPostService() {
