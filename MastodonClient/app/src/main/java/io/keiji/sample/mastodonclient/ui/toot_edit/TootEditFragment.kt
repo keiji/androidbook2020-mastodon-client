@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.FragmentTootEditBinding
 import io.keiji.sample.mastodonclient.service.PostTootService
 import io.keiji.sample.mastodonclient.ui.login.LoginActivity
+import timber.log.Timber
 
 class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
 
@@ -56,6 +58,13 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
 
     private var callback: Callback? = null
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            Timber.d("handleOnBackPressed")
+            callback?.onCloseEdit()
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -64,6 +73,17 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         if (context is Callback) {
             callback = context
         }
+
+        if (context is AppCompatActivity) {
+            onBackPressedCallback.remove()
+            context.onBackPressedDispatcher.addCallback(onBackPressedCallback)
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
+        onBackPressedCallback.remove()
     }
 
     private lateinit var adapter: MediaPreviewAdapter
