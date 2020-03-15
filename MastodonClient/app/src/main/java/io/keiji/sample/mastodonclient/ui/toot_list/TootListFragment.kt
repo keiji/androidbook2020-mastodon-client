@@ -105,6 +105,8 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
         val bindingData: FragmentTootListBinding? = DataBindingUtil.bind(view)
         binding = bindingData ?: return
 
+        viewModel.onRestoreInstanceState(savedInstanceState)
+
         bindingData.recyclerView.also {
             it.layoutManager = layoutManager
             it.adapter = adapter
@@ -137,6 +139,12 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
         })
 
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        viewModel.onSaveInstanceState(outState)
     }
 
     private fun launchLoginActivity() {
