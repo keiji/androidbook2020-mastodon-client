@@ -107,6 +107,10 @@ class TootListFragment : Fragment(R.layout.fragment_toot_list),
 
         viewModel.onRestoreInstanceState(savedInstanceState)
 
+        (requireActivity() as AppCompatActivity).also {
+            it.setSupportActionBar(bindingData.toolbar)
+        }
+
         bindingData.recyclerView.also {
             it.layoutManager = layoutManager
             it.adapter = adapter
