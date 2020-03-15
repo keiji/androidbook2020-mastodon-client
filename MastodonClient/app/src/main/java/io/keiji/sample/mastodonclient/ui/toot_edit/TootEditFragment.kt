@@ -23,10 +23,12 @@ import io.keiji.sample.mastodonclient.BuildConfig
 import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.FragmentTootEditBinding
 import io.keiji.sample.mastodonclient.service.PostTootService
+import io.keiji.sample.mastodonclient.ui.ConfirmDialogFragment
 import io.keiji.sample.mastodonclient.ui.login.LoginActivity
 import timber.log.Timber
 
-class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
+class TootEditFragment : Fragment(R.layout.fragment_toot_edit),
+        ConfirmDialogFragment.Callback {
 
     companion object {
         val TAG = TootEditFragment::class.java.simpleName
@@ -61,7 +63,12 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             Timber.d("handleOnBackPressed")
-            callback?.onCloseEdit()
+            if (!viewModel.hasEdited) {
+                callback?.onCloseEdit()
+                return
+            }
+
+            showConfirmDialog()
         }
     }
 
@@ -198,10 +205,28 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         inflater.inflate(R.menu.toot_edit, menu)
     }
 
+    private fun showConfirmDialog() {
+        ConfirmDialogFragment
+                .newInstance(
+                        "入力している内容があります",
+                        "投稿せずに閉じてよろしいですか？",
+                        "投稿せずに閉じる",
+                        "編集を続ける"
+                ).also {
+                    it.setTargetFragment(this, -1)
+                }
+                .show(parentFragmentManager, ConfirmDialogFragment.TAG)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                callback?.onCloseEdit()
+                if (!viewModel.hasEdited) {
+                    callback?.onCloseEdit()
+                    return super.onOptionsItemSelected(item)
+                }
+
+                showConfirmDialog()
                 true
             }
             R.id.menu_post -> {
@@ -212,9 +237,18 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         }
     }
 
+    override fun onClickPositiveButton() {
+        callback?.onCloseEdit()
+    }
+
+    override fun onClickNegativeButton() {
+        // Do nothing
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 
         binding?.unbind()
     }
+
 }

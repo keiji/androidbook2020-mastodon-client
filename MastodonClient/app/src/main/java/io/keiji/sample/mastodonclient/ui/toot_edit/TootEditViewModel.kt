@@ -42,6 +42,21 @@ class TootEditViewModel(
 
     private val workManager = WorkManager.getInstance(application)
 
+    val hasEdited: Boolean
+        get() {
+            if (!status.value.isNullOrBlank()) {
+                return true
+            }
+
+            val mediaAttachmentsSnapshot = mediaAttachments.value
+            if (mediaAttachmentsSnapshot != null
+                    && mediaAttachmentsSnapshot.isNotEmpty()) {
+                return true
+            }
+
+            return false
+        }
+
     val status = MutableLiveData<String>()
 
     val loginRequired = MutableLiveData<Boolean>()
