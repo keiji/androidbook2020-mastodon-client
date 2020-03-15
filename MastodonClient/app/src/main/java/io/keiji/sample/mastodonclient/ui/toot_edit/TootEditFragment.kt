@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -49,6 +50,8 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
 
     interface Callback {
         fun onPostComplete()
+
+        fun onCloseEdit()
     }
 
     private var callback: Callback? = null
@@ -68,6 +71,11 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.also {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeAsUpIndicator(R.drawable.baseline_clear_white_24)
+        }
 
         val bindingData: FragmentTootEditBinding? = DataBindingUtil.bind(view)
         binding = bindingData ?: return
@@ -172,6 +180,10 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                callback?.onCloseEdit()
+                true
+            }
             R.id.menu_post -> {
                 viewModel.addTootQueue()
                 true

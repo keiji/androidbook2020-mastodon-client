@@ -35,4 +35,8 @@ class TootEditActivity : AppCompatActivity(),
         finish()
     }
 
+    override fun onCloseEdit() {
+        setResult(Activity.RESULT_CANCELED)
+        finish()
+    }
 }
