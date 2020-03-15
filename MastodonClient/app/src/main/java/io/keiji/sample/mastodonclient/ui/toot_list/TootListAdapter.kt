@@ -1,14 +1,17 @@
 package io.keiji.sample.mastodonclient.ui.toot_list
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.databinding.ListItemTootBinding
 import io.keiji.sample.mastodonclient.entity.Toot
+import io.keiji.sample.mastodonclient.ui.MediaListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,8 +88,29 @@ class TootListAdapter(
         private val binding: ListItemTootBinding,
         private val callback: Callback?
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val layoutManager = LinearLayoutManager(
+                binding.root.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        ).also {
+            binding.recyclerView.layoutManager = it
+        }
+        private val adapter = MediaListAdapter(
+                LayoutInflater.from(binding.root.context)
+        ).also {
+            binding.recyclerView.adapter = it
+        }
+
         fun bind(toot: Toot) {
             binding.toot = toot
+            adapter.mediaList = toot.mediaAttachments
+
+            binding.recyclerView.visibility = if (toot.mediaAttachments.isEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+
             binding.root.setOnClickListener {
                 callback?.openDetail(toot)
             }
