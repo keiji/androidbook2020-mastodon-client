@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="@{toot.createdAt}"
+            app:dateText="@{toot.createdAt}"
             app:layout_constraintTop_toTopOf="@+id/user_name"
             app:layout_constraintBottom_toBottomOf="@+id/user_name"
             app:layout_constraintStart_toEndOf="@+id/user_name"
