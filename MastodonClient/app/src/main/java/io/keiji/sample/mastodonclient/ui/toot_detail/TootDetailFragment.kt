@@ -1,8 +1,11 @@
 package io.keiji.sample.mastodonclient.ui.toot_detail
 
+import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,6 +35,22 @@ class TootDetailFragment : Fragment(R.layout.fragment_toot_detail) {
         }
     }
 
+    interface Callback {
+        fun onCloseDetail()
+    }
+
+    private var callback: Callback? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        setHasOptionsMenu(true)
+
+        if (context is Callback) {
+            callback = context
+        }
+    }
+
     private var toot: Toot? = null
 
     private var binding: FragmentTootDetailBinding? = null
@@ -56,6 +75,10 @@ class TootDetailFragment : Fragment(R.layout.fragment_toot_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.also {
+            it.setDisplayHomeAsUpEnabled(true)
+        }
 
         val bindingData: FragmentTootDetailBinding? = DataBindingUtil.bind(view)
         binding = bindingData ?: return
@@ -88,5 +111,15 @@ class TootDetailFragment : Fragment(R.layout.fragment_toot_detail) {
 
     private fun showTootNotFound() {
         Toast.makeText(requireContext(), "Toot not found", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                callback?.onCloseDetail()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

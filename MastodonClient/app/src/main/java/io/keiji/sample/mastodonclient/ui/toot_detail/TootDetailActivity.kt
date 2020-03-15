@@ -8,7 +8,8 @@ import io.keiji.sample.mastodonclient.R
 import io.keiji.sample.mastodonclient.entity.Toot
 import io.keiji.sample.mastodonclient.ui.toot_list.TootListFragment
 
-class TootDetailActivity : AppCompatActivity() {
+class TootDetailActivity : AppCompatActivity(),
+        TootDetailFragment.Callback {
 
     companion object {
         private const val KEY_TOOT = "key_toot"
@@ -37,6 +38,10 @@ class TootDetailActivity : AppCompatActivity() {
                     )
                     .commit()
         }
+    }
+
+    override fun onCloseDetail() {
+        finish()
     }
 
 }
