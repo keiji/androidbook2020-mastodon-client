@@ -2,6 +2,7 @@ package io.keiji.sample.mastodonclient.ui.toot_edit
 
 import android.app.Application
 import android.net.Uri
+import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.work.Constraints
@@ -27,6 +28,11 @@ class TootEditViewModel(
         private val coroutineScope: CoroutineScope,
         application: Application
 ) : AndroidViewModel(application) {
+
+    companion object {
+        private const val KEY_STATUS = "status"
+        private const val KEY_MEDIA_ATTACHMENTS = "media_attachments"
+    }
 
     private val userCredentialRepository = UserCredentialRepository(
         application
@@ -136,5 +142,22 @@ class TootEditViewModel(
 
     private fun handleMediaException(mediaUri: Uri, e: IOException) {
         errorMessage.postValue("メディアを読み込めません ${e.message} ${mediaUri}")
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(KEY_STATUS, status.value)
+        outState.putParcelableArrayList(
+            KEY_MEDIA_ATTACHMENTS,
+            mediaAttachments.value
+        )
+    }
+
+    fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState ?: return
+
+        status.postValue(savedInstanceState.getString(KEY_STATUS))
+        val mediaList: ArrayList<LocalMedia> = savedInstanceState
+            .getParcelableArrayList(KEY_MEDIA_ATTACHMENTS) ?: ArrayList()
+        mediaAttachments.postValue(mediaList)
     }
 }

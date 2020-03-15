@@ -76,6 +76,7 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         bindingData.viewModel = viewModel
 
         handleIntentExtras(requireActivity().intent)
+        viewModel.onRestoreInstanceState(savedInstanceState)
 
         adapter = MediaPreviewAdapter(layoutInflater, lifecycleScope)
         layoutManager = LinearLayoutManager(requireContext(),
@@ -107,6 +108,12 @@ class TootEditFragment : Fragment(R.layout.fragment_toot_edit) {
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        viewModel.onSaveInstanceState(outState)
     }
 
     private fun handleIntentExtras(intent: Intent) {

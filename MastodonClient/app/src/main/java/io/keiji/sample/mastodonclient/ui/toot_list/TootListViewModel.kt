@@ -1,6 +1,7 @@
 package io.keiji.sample.mastodonclient.ui.toot_list
 
 import android.app.Application
+import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -159,5 +160,15 @@ class TootListViewModel(
             clear()
             loadNext()
         }
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        // Do nothing
+    }
+
+    fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState ?: return
+
+        reloadUserCredential()
     }
 }
