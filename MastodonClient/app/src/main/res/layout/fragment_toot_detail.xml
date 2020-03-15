@@ -55,15 +55,14 @@
             tools:text="ちなみに今日の時点でのAndroid Studioから見えるバージョン別シェア。
             よくよく考えたらAndroid Pieの記載がないので、Android Studioが表示しているデータはかなり古い。" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/content"
-            app:media="@{toot.topMedia}"
-            tools:src="@mipmap/ic_launcher" />
+            tools:listitem="@layout/list_item_media" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
