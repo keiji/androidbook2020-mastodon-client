@@ -1,7 +1,6 @@
 package io.keiji.sample.mastodonclient.ui.login
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import io.keiji.sample.mastodonclient.entity.UserCredential
@@ -42,8 +41,6 @@ class LoginViewModel(
                     scopes,
                     code
             )
-
-            Log.d(TAG, responseToken.accessToken)
 
             val userCredential = UserCredential(
                 instanceUrl = instanceUrl,
