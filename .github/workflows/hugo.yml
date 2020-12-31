@@ -1,0 +1,33 @@
+name: Hugo-Site
+
+on:
+  push:
+    branches: [ gh-pages ]
+  pull_request:
+    branches: [ gh-pages ]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+        with:
+          persist-credentials: false
+      - name: Setup
+        run: |
+          git submodule init
+          git submodule update
+      - name: Build Site'
+        uses: chabad360/hugo-actions@v2
+        with:
+          buildPath: ./public
+          args: --gc --cleanDestinationDir
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: ./public
+          CLEAN: true  
