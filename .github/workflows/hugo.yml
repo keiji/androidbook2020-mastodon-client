@@ -2,9 +2,9 @@ name: Hugo-Site
 
 on:
   push:
-    branches: [ gh-pages ]
+    branches: [ support-site ]
   pull_request:
-    branches: [ gh-pages ]
+    branches: [ support-site ]
 jobs:
   build:
 
