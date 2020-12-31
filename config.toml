@@ -1,0 +1,30 @@
+baseURL = "https://keiji.github.io/androidbook2020-mastodon-client/"
+languageCode = "ja-JP"
+title = "作って学ぶAndroidアプリ開発[Kotlin対応] サポート"
+theme = "hugo-theme-docport"
+
+pygmentsCodeFences = true
+pygmentsStyle = "monokai"
+
+disableKinds = ["taxonomy", "taxonomyTerm", "category", "RSS"]
+home = [ "HTML", "RSS", "JSON"]
+
+[params]
+ordersectionsby = "weight"
+disableSearch = false
+disableNavChevron = false
+menushortcutsnewtab = false
+
+enableGitInfo = true
+
+# Code highlight configuration
+[markup.highlight]
+codeFences = true
+guessSyntax = true
+hl_Lines = ""
+lineNoStart = 1
+lineNos = false
+lineNumbersInTable = true
+noClasses = true
+style = "monokai"
+tabWidth = 4
